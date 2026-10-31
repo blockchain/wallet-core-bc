@@ -566,25 +566,28 @@ class HDWalletTests: XCTestCase {
         let accountPath = DerivationPath("m/1852'/1815'/0'")!
 
         // Test private key
-        let privateKey = wallet.getCardanoAccountKey(accountPath: accountPath)
+        let privateKey = wallet.getCardanoAccountKey(accountPath: accountPath)!
         XCTAssertEqual(privateKey.data.hexString, "9853acc5520d0d8f8697a11f0400ef93140e327a0ef39cfc059dbbe7c2f5e84182842f0dc9978eb558290a643334c246e758f809c4361b16c5610f62de5286da694c6b6604a6fd72d67bd563b56221d8aaa585a7ac498bc7015a831d524e6356")
 
         // Test public key
-        let publicKey = wallet.getCardanoAccountPublicKey(accountPath: accountPath)
+        let publicKey = wallet.getCardanoAccountPublicKey(accountPath: accountPath)!
         XCTAssertEqual(publicKey.data.hexString, "546107190a46ccc825d4a099b29cabe8da529fff8432bc7d5a7b202710ec3ce2694c6b6604a6fd72d67bd563b56221d8aaa585a7ac498bc7015a831d524e6356")
         let bech32Xpub = Bech32.encode(hrp: "xpub", data: publicKey.data)
         XCTAssertEqual(bech32Xpub, "xpub123sswxg2gmxvsfw55zvm989tard998llssetcl260vszwy8v8n3xjnrtvcz2dltj6eaa2ca4vgsa3249skn6cjvtcuq44qca2f8xx4syzyqc0")
 
         let accountPathOne = DerivationPath("m/1852'/1815'/1'")!
 
-        let privateKeyOne = wallet.getCardanoAccountKey(accountPath: accountPathOne)
-        XCTAssertEqual(privateKeyOne.data.hexString, "9853acc5520d0d8f8697a11f0400ef93140e327a0ef39cfc059dbbe7c2f5e84182842f0dc9978eb558290a643334c246e758f809c4361b16c5610f62de5286da694c6b6604a6fd72d67bd563b56221d8aaa585a7ac498bc7015a831d524e6356")
+        let privateKeyOne = wallet.getCardanoAccountKey(accountPath: accountPathOne)!
+        XCTAssertEqual(privateKeyOne.data.hexString, "60b748d91acff81ea449fbb969b9dd3e93379dc4416ae1c51fbf29a3c3f5e841e0f867214e237def1afa11496995018da054e70ae40061c95200196c9abc1d38620e2f2085d6a81ed8ba7583d275b7eacd5484cfff3d37f3fbc708f5755b0180")
 
         // Test public key
-        let publicKeyOne = wallet.getCardanoAccountPublicKey(accountPath: accountPathOne)
-        XCTAssertEqual(publicKeyOne.data.hexString, "546107190a46ccc825d4a099b29cabe8da529fff8432bc7d5a7b202710ec3ce2694c6b6604a6fd72d67bd563b56221d8aaa585a7ac498bc7015a831d524e6356")
-        let bech32XpubOne = Bech32.encode(hrp: "xpub", data: publicKey.data)
-        XCTAssertEqual(bech32XpubOne, "xpub123sswxg2gmxvsfw55zvm989tard998llssetcl260vszwy8v8n3xjnrtvcz2dltj6eaa2ca4vgsa3249skn6cjvtcuq44qca2f8xx4syzyqc0")
+        let publicKeyOne = wallet.getCardanoAccountPublicKey(accountPath: accountPathOne)!
+        XCTAssertEqual(publicKeyOne.data.hexString, "2d933720d2f0a96b4e4b73c3714dd356a42a2070513da5b2a2ecfb2bb7b0358d620e2f2085d6a81ed8ba7583d275b7eacd5484cfff3d37f3fbc708f5755b0180")
+
+        XCTAssertNil(wallet.getCardanoAccountKey(accountPath: DerivationPath("m/44'/1815'/0'")!))
+        XCTAssertNil(wallet.getCardanoAccountPublicKey(accountPath: DerivationPath("m/1852'/1815'/0'/0/0")!))
+        XCTAssertNil(wallet.getCardanoAccountKey(accountPath: DerivationPath("m/1852/1815'/0'")!))
+        XCTAssertNil(wallet.getCardanoAccountKey(accountPath: DerivationPath("m/1852'/1815'/0")!))
     }
 
     func testCardanoMore() {
@@ -592,11 +595,11 @@ class HDWalletTests: XCTestCase {
         let accountPath = DerivationPath("m/1852'/1815'/0'")!
 
         // Test private key
-        let privateKey = wallet.getCardanoAccountKey(accountPath: accountPath)
+        let privateKey = wallet.getCardanoAccountKey(accountPath: accountPath)!
         XCTAssertEqual(privateKey.data.hexString, "20f27b66c0e70992b42b4e660ef6e6f65ae855e9354050e37210669fedb7e956bf865626da1e5db89aa62d8292c3eac8d05c2b32141e7f7bdaa5b1a1ec40e04574c0f111cb4044232e16af148ab22a9efb2ba222c2a096e410e052ab8f1f9e65")
 
         // Test public key
-        let publicKey = wallet.getCardanoAccountPublicKey(accountPath: accountPath)
+        let publicKey = wallet.getCardanoAccountPublicKey(accountPath: accountPath)!
         XCTAssertEqual(publicKey.data.hexString, "b65b83866d79d04be7fa07a4df413fe2d16a99ea5cdea606070eca2e63c4e1c374c0f111cb4044232e16af148ab22a9efb2ba222c2a096e410e052ab8f1f9e65")
         let bech32Xpub = Bech32.encode(hrp: "xpub", data: publicKey.data)
         XCTAssertEqual(bech32Xpub, "xpub1kedc8pnd08gyhel6q7jd7sflutgk4x02tn02vps8pm9zuc7yu8phfs83z895q3pr9ct279y2kg4fa7et5g3v9gykusgwq54t3u0eueghq3q3r")
@@ -606,7 +609,7 @@ class HDWalletTests: XCTestCase {
         let wallet = HDWallet.test
         let accountPath = DerivationPath("m/1852'/1815'/0'")!
 
-        let privateKey = wallet.getCardanoAccountKey(accountPath: accountPath)
+        let privateKey = wallet.getCardanoAccountKey(accountPath: accountPath)!
         XCTAssertEqual(privateKey.data.hexString,
                        "289de878a776088d8bb0fcc1a1215463d30b79c07f96060e1b66ea690fa14952f2d1ed5b4fa9af04ab1405f72aae65169a36b7596eba20eacaf48bea1315f398b06343d03a9b77cc063e236f188c7c123af6af9bb64a5491c6afda2b1329fad2")
         let publicKey = privateKey.getPublicKeyEd25519Cardano()

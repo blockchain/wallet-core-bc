@@ -190,18 +190,20 @@ struct TWPrivateKey* _Nullable TWHDWalletGetDerivedKey(struct TWHDWallet* _Nonnu
 /// \param wallet non-null TWHDWallet
 /// \param accountPath non-null derivation path
 /// \note Returned object needs to be deleted with \TWPrivateKeyDelete
-/// \return Non-null corresponding private key
+/// \note Null is returned if the path is not a hardened Cardano account path (m/1852'/1815'/account') or the key cannot be derived
+/// \return Nullable corresponding private key
 TW_EXPORT_METHOD
-struct TWPrivateKey* _Nonnull TWHDWalletGetCardanoAccountKey(struct TWHDWallet* _Nonnull wallet, struct TWDerivationPath* _Nonnull accountPath);
+struct TWPrivateKey* _Nullable TWHDWalletGetCardanoAccountKey(struct TWHDWallet* _Nonnull wallet, struct TWDerivationPath* _Nonnull accountPath);
 
 /// Returns the Cardano account-level public key (m/1852'/1815'/0')
 ///
 /// \param wallet non-null TWHDWallet
 /// \param accountPath non-null derivation path
 /// \note Returned object needs to be deleted with \TWPublicKeyDelete
-/// \return Non-null corresponding public key
+/// \note Null is returned if the path is not a hardened Cardano account path (m/1852'/1815'/account') or the key cannot be derived
+/// \return Nullable corresponding public key
 TW_EXPORT_METHOD
-struct TWPublicKey* _Nonnull TWHDWalletGetCardanoAccountPublicKey(struct TWHDWallet* _Nonnull wallet, struct TWDerivationPath* _Nonnull accountPath);
+struct TWPublicKey* _Nullable TWHDWalletGetCardanoAccountPublicKey(struct TWHDWallet* _Nonnull wallet, struct TWDerivationPath* _Nonnull accountPath);
 
 /// Returns the extended private key (for default 0 account).
 ///

@@ -8,6 +8,7 @@
 
 #include <TrustWalletCore/TWHash.h>
 #include <TrustWalletCore/TWData.h>
+#include <TrustWalletCore/TWDerivationPath.h>
 #include <TrustWalletCore/TWHDWallet.h>
 #include <TrustWalletCore/TWMnemonic.h>
 #include <TrustWalletCore/TWPrivateKey.h>
@@ -628,4 +629,30 @@ TEST(HDWallet, GetPublicKeyFromExtendedInvalidDerivationPath) {
     // Derivation path parsing fails before the extended key is inspected.
     const auto publicKey = WRAP(TWPublicKey, TWHDWalletGetPublicKeyFromExtended(STRING("xpub").get(), TWCoinTypeBitcoin, STRING("m/2147483648").get()));
     EXPECT_EQ(publicKey.get(), nullptr);
+}
+
+TEST(HDWallet, CardanoAccountKeyInvalidPathReturnsNull) {
+    const auto wallet = WRAP(TWHDWallet, TWHDWalletCreateWithMnemonic(STRING("hungry language artwork away immune clerk mammal student detect gun element open").get(), STRING("").get()));
+
+    const auto validPath = WRAP(TWDerivationPath, TWDerivationPathCreateWithString(STRING("m/1852'/1815'/0'").get()));
+    const auto privateKey = WRAP(TWPrivateKey, TWHDWalletGetCardanoAccountKey(wallet.get(), validPath.get()));
+    ASSERT_NE(privateKey.get(), nullptr);
+    const auto publicKey = WRAP(TWPublicKey, TWHDWalletGetCardanoAccountPublicKey(wallet.get(), validPath.get()));
+    ASSERT_NE(publicKey.get(), nullptr);
+
+    const auto wrongPurpose = WRAP(TWDerivationPath, TWDerivationPathCreateWithString(STRING("m/44'/1815'/0'").get()));
+    EXPECT_EQ(WRAP(TWPrivateKey, TWHDWalletGetCardanoAccountKey(wallet.get(), wrongPurpose.get())).get(), nullptr);
+
+    const auto addressPath = WRAP(TWDerivationPath, TWDerivationPathCreateWithString(STRING("m/1852'/1815'/0'/0/0").get()));
+    EXPECT_EQ(WRAP(TWPublicKey, TWHDWalletGetCardanoAccountPublicKey(wallet.get(), addressPath.get())).get(), nullptr);
+
+    const auto softPurpose = WRAP(TWDerivationPath, TWDerivationPathCreateWithString(STRING("m/1852/1815'/0'").get()));
+    EXPECT_EQ(WRAP(TWPrivateKey, TWHDWalletGetCardanoAccountKey(wallet.get(), softPurpose.get())).get(), nullptr);
+
+    const auto softCoin = WRAP(TWDerivationPath, TWDerivationPathCreateWithString(STRING("m/1852'/1815/0'").get()));
+    EXPECT_EQ(WRAP(TWPrivateKey, TWHDWalletGetCardanoAccountKey(wallet.get(), softCoin.get())).get(), nullptr);
+
+    const auto softAccount = WRAP(TWDerivationPath, TWDerivationPathCreateWithString(STRING("m/1852'/1815'/0").get()));
+    EXPECT_EQ(WRAP(TWPrivateKey, TWHDWalletGetCardanoAccountKey(wallet.get(), softAccount.get())).get(), nullptr);
+    EXPECT_EQ(WRAP(TWPublicKey, TWHDWalletGetCardanoAccountPublicKey(wallet.get(), softAccount.get())).get(), nullptr);
 }

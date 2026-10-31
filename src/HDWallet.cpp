@@ -216,7 +216,10 @@ template <std::size_t seedSize>
 PrivateKey HDWallet<seedSize>::getCardanoAccountKey(const DerivationPath& accountPath) const {
     if (accountPath.indices.size() != 3 ||
         accountPath.indices[0].value != 1852 ||
-        accountPath.indices[1].value != 1815) {
+        accountPath.indices[1].value != 1815 ||
+        !accountPath.indices[0].hardened ||
+        !accountPath.indices[1].hardened ||
+        !accountPath.indices[2].hardened) {
         throw std::invalid_argument("Invalid Cardano account path");
     }
 
